@@ -16,34 +16,27 @@ defmodule ReflexiveTransitiveClosure do
     Enum.reduce(edge_list, %{}, fn(x, acc) -> add_edge(acc, x) end)
   end
 
-  def visit(adjacency_map, already_visited, edge) do
-    adjacency_map = add_edge(adjacency_map, {edge, edge})  # reflexive
-    already_visited = already_visited |> MapSet.put(edge)
-    {adjacency_map, already_visited}
-  end
-
-  def dfs(adjacency_map, already_visited \\ MapSet.new) do
+  def dfs(adjacency_map, already_visited \\ MapSet.new, solution \\ %{}) do
     vertices = MapSet.new(Map.keys(adjacency_map))
     not_visited = MapSet.difference(vertices, already_visited)
     case not_visited |> Enum.fetch(0) do
       {:ok, source} ->
-        {adjacency_map, _} = dfs_from_vertex(adjacency_map, MapSet.new, source)
-        dfs(adjacency_map, already_visited |> MapSet.put(source))
+        solution = Map.put(solution, source, dfs_from_vertex(adjacency_map, MapSet.new, source))
+        dfs(adjacency_map, already_visited |> MapSet.put(source), solution)
       :error ->
-        adjacency_map
+        solution
     end
   end
 
-  def dfs_from_vertex(adjacency_map, already_visited, source) do
-    {adjacency_map, already_visited} = visit(adjacency_map, already_visited, source)
-    reachable = MapSet.difference(adjacency_map[source] || [], already_visited)
+  def dfs_from_vertex(adjacency_map, visited, source) do
+    visited = visited |> MapSet.put(source)
+    reachable = MapSet.difference(adjacency_map[source] || [], visited)
     case reachable |> Enum.fetch(0) do
       {:ok, neighbor} ->
-        {adjacency_map, already_visited} = dfs_from_vertex(adjacency_map, already_visited, neighbor)
-        adjacency_map = merge_edges(adjacency_map, %{source => adjacency_map[neighbor] || MapSet.new})
-        dfs_from_vertex(adjacency_map, already_visited, source)
+        visited = dfs_from_vertex(adjacency_map, visited, neighbor)
+        dfs_from_vertex(adjacency_map, visited, source)
       :error ->
-        {adjacency_map, already_visited}
+        visited
     end
   end
 end
