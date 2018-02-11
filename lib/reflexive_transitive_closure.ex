@@ -27,21 +27,21 @@ defmodule ReflexiveTransitiveClosure do
     not_visited = MapSet.difference(vertices, already_visited)
     case not_visited |> Enum.fetch(0) do
       {:ok, source} ->
-        {adjacency_map, _} = dfs(adjacency_map, MapSet.new, source)
+        {adjacency_map, _} = dfs_from_vertex(adjacency_map, MapSet.new, source)
         dfs(adjacency_map, already_visited |> MapSet.put(source))
       :error ->
         adjacency_map
     end
   end
 
-  def dfs(adjacency_map, already_visited, source) do
+  def dfs_from_vertex(adjacency_map, already_visited, source) do
     {adjacency_map, already_visited} = visit(adjacency_map, already_visited, source)
     reachable = MapSet.difference(adjacency_map[source] || [], already_visited)
     case reachable |> Enum.fetch(0) do
       {:ok, neighbor} ->
-        {adjacency_map, already_visited} = dfs(adjacency_map, already_visited, neighbor)
+        {adjacency_map, already_visited} = dfs_from_vertex(adjacency_map, already_visited, neighbor)
         adjacency_map = merge_edges(adjacency_map, %{source => adjacency_map[neighbor] || MapSet.new})
-        dfs(adjacency_map, already_visited, source)
+        dfs_from_vertex(adjacency_map, already_visited, source)
       :error ->
         {adjacency_map, already_visited}
     end
