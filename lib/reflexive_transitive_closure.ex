@@ -16,6 +16,16 @@ defmodule ReflexiveTransitiveClosure do
     Enum.reduce(edge_list, %{}, fn(x, acc) -> add_edge(acc, x) end)
   end
 
+  def adjacency_map_to_edge_list(adjacency_map) do
+    Enum.reduce(adjacency_map, [], fn({vertex, destinations}, acc) ->
+      Enum.map(destinations, fn x -> {vertex, x} end) ++ acc
+    end)
+  end
+
+  def reflexive_transitive_closure(edge_list) do
+    adjacency_map_to_edge_list(dfs(edge_list_to_adjacency_map(edge_list)))
+  end
+
   def dfs(adjacency_map, already_visited \\ MapSet.new, solution \\ %{}) do
     vertices = MapSet.new(Map.keys(adjacency_map))
     not_visited = MapSet.difference(vertices, already_visited)
