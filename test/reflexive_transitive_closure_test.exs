@@ -18,4 +18,13 @@ defmodule ReflexiveTransitiveClosureTest do
     assert ReflexiveTransitiveClosure.edge_list_to_adjacency_map([{0, 1}, {1, 2}, {1, 3}]) ==
         %{0 => MapSet.new([1]), 1 => MapSet.new([2, 3])}
   end
+
+  test "does DFS" do
+    assert ReflexiveTransitiveClosure.dfs(
+      ReflexiveTransitiveClosure.edge_list_to_adjacency_map([{0, 1}, {1, 0}])) ==
+      ReflexiveTransitiveClosure.edge_list_to_adjacency_map([{0, 0}, {0, 1}, {1, 0}, {1, 1}])
+    assert ReflexiveTransitiveClosure.dfs(
+      ReflexiveTransitiveClosure.edge_list_to_adjacency_map([{0, 1}, {1, 2}, {2, 0}])) ==
+      ReflexiveTransitiveClosure.edge_list_to_adjacency_map([{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}])
+  end
 end
