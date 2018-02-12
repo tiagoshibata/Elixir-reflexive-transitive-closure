@@ -6,12 +6,6 @@ defmodule ReflexiveTransitiveClosure do
     end) |> elem(1) |> Map.put_new(destination, MapSet.new)
   end
 
-  def merge_edges(graph1, graph2) do
-    Map.merge(graph1, graph2, fn _source, destinations_1, destinations_2 ->
-      MapSet.union(destinations_1, destinations_2)
-    end)
-  end
-
   def edge_list_to_adjacency_map(edge_list) do
     Enum.reduce(edge_list, %{}, &(add_edge(&2, &1)))
   end
