@@ -13,7 +13,7 @@ defmodule ReflexiveTransitiveClosure do
   end
 
   def edge_list_to_adjacency_map(edge_list) do
-    Enum.reduce(edge_list, %{}, fn(x, acc) -> add_edge(acc, x) end)
+    Enum.reduce(edge_list, %{}, &(add_edge(&2, &1)))
   end
 
   def adjacency_map_to_edge_list(adjacency_map) do
