@@ -1,0 +1,98 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{svg}
+\usepackage{listings}
+\lstset{
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    commentstyle=\color{green}\ttfamily,
+    breaklines=true
+}
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version and documentation can be obtained at:
+% http://www.ctan.org/pkg/url
+% Basically, \url{my_url_here}.
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+\title{Relatório - EP1}
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Tiago K C Shibata}
+\IEEEauthorblockA{Escola Politécnica\\
+Universidade de São Paulo\\
+tiago.shibata@usp.br}
+}
+
+\maketitle
+
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+\section{Introdução}
+Esse relatório acompanha o primeiro exercício programa (EP1) da disciplina PCS3556 - Lógica Computacional.
+
+\hfill 11 de Fevereiro de 2018
+
+\section{Tarefa}
+
+A tarefa consiste em implementar o algoritmo de fecho reflexivo e transitivo de uma relação binária $R \subseteq A X A$ sobre um conjunto finito A que é descrita por meio de um grafo direcionado, usando recursão em uma linguagem funcional (Elixir). A entrada e saída são representações do grafo como lista de tuplas (lista de arestas representadas por pares indicando origem e destino).
+
+\section{Estruturas de dados}
+
+No código, a lista de tuplas foi convertida para mapa de adjacências. Cada chave do mapa indica um vértice de origem. O valor da chave é um conjunto ($MapSet$). A escolha das estruturas de dados foi feita tendo em mente performance e facilidade: o uso do mapa evita que varramos toda a lista toda vez que formos buscar adjacências, e o conjunto permite fácil e rápida únião de conjuntos quando desejamos adicionar arestas.
+
+\section{Algoritmo}
+
+Para buscar todos os vértices alcançáveis a partir de uma origem (fecho transitivo), foi usada uma busca por profundidade em cima do mapa de adjacências. O algoritmo é bastante conhecido e dispensa apresentações.
+
+\section{Código e testes}
+
+As funções para conversão de lista de tuplas para mapas de adjacências foram implementadas e testadas:
+
+\lstinputlisting{1.ex}
+
+Os testes foram desenvolvidos junto com o código:
+
+\lstinputlisting{1_test.ex}
+
+Uma função de busca por profundidade a partir de um vértice foi implementada, usando recursão:
+
+\lstinputlisting{2.ex}
+
+E uma função para chamar $dfs\_from\_vertex$ para todos os vértices e retornar um mapa de conjuntos de vértices alcançáveis:
+
+\lstinputlisting{3.ex}
+
+Funções de busca por profundidade foram testadas:
+
+\lstinputlisting{3_test.ex}
+
+Por fim, foi feita e testada a conversão final, de mapa de adjacências para lista de pares:
+
+\lstinputlisting{4.ex}
+
+Testes:
+
+\lstinputlisting{4_test.ex}
+
+\section{Créditos}
+Agradeço ao professor Ricardo Luis de Azevedo da Rocha pelo conhecimento transmitido.
+
+\begin{thebibliography}{1}
+\bibitem{infinormatica}
+Friedel Ziegelmayer. \emph{Elixir ExDoc}. https://hexdocs.pm/elixir/, acessado em 11/02/2018
+\end{thebibliography}
+
+\end{document}
