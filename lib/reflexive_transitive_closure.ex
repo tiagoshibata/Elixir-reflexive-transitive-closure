@@ -12,7 +12,7 @@ defmodule ReflexiveTransitiveClosure do
 
   def adjacency_map_to_edge_list(adjacency_map) do
     Enum.reduce(adjacency_map, [], fn({vertex, destinations}, acc) ->
-      Enum.map(destinations, fn x -> {vertex, x} end) ++ acc
+      Enum.map(destinations, &({vertex, &1})) ++ acc
     end)
   end
 
